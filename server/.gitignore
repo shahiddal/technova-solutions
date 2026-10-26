@@ -1,0 +1,5 @@
+node_modules
+.env
+
+
+# VITE_API_URL=https://<my-api-domain>
