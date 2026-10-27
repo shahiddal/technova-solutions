@@ -7,6 +7,9 @@ const contactRoutes = require("./routes/contactRoutes");
 
 const app = express();
 
+// Behind the host's proxy (Render): use the real client IP for rate limiting, not the proxy's
+app.set("trust proxy", 1);
+
 // Middleware
 app.use(
   cors({
