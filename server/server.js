@@ -1,9 +1,16 @@
 const express = require("express");
 const cors = require("cors");
+const helmet = require("helmet");
 require("dotenv").config();
 
 const connectDB = require("./config/db");
 const contactRoutes = require("./routes/contactRoutes");
+const enquiryRoutes = require("./routes/enquiryRoutes");
+const {
+  serviceRoutes,
+  projectRoutes,
+  blogRoutes,
+} = require("./routes/contentRoutes");
 
 const app = express();
 
@@ -11,6 +18,7 @@ const app = express();
 app.set("trust proxy", 1);
 
 // Middleware
+app.use(helmet());
 app.use(
   cors({
     origin: (process.env.CLIENT_URL || "http://localhost:5173").split(","),
@@ -20,6 +28,18 @@ app.use(express.json());
 
 // Routes
 app.use("/api/contact", contactRoutes);
+app.use("/api/enquiries", enquiryRoutes);
+app.use("/api/services", serviceRoutes);
+app.use("/api/projects", projectRoutes);
+app.use("/api/blogs", blogRoutes);
+
+// Unknown API routes: JSON instead of Express's default HTML page
+app.use("/api", (req, res) => {
+  res.status(404).json({
+    success: false,
+    message: "API route not found",
+  });
+});
 
 // Test API
 app.get("/", (req, res) => {

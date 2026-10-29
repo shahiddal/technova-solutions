@@ -1,8 +1,9 @@
 import { Link, useParams } from "react-router-dom";
 
-import { blogs, getReadingTime } from "../data/blogs";
-import { getRelated } from "../data/helpers";
+import { useApi } from "../api";
+import { getReadingTime, getRelated } from "../data/helpers";
 import NotFound from "./NotFound";
+import { DetailError, DetailSkeleton } from "../components/PageStatus";
 import {
   Breadcrumb,
   CtaSection,
@@ -39,10 +40,13 @@ function ArticleBlock({ block }) {
 function BlogDetail() {
   const { slug } = useParams();
 
-  const index = blogs.findIndex((blog) => blog.slug === slug);
-  const blog = blogs[index];
+  const { data: blog, loading, error, notFound } = useApi(`/api/blogs/${slug}`);
+  // One list request feeds previous/next and the related cards
+  const { data: blogs = [] } = useApi("/api/blogs");
 
-  if (!blog) {
+  if (loading) return <DetailSkeleton />;
+
+  if (notFound) {
     return (
       <NotFound
         title="Article Not Found"
@@ -53,8 +57,11 @@ function BlogDetail() {
     );
   }
 
-  const previous = blogs[index - 1];
-  const next = blogs[index + 1];
+  if (error) return <DetailError />;
+
+  const index = blogs.findIndex((item) => item.slug === blog.slug);
+  const previous = index > 0 ? blogs[index - 1] : null;
+  const next = index >= 0 ? blogs[index + 1] : null;
 
   return (
     <div className="min-h-screen bg-slate-950 px-4 pb-20 pt-28 text-white sm:px-6 lg:px-8">
@@ -145,7 +152,7 @@ function BlogDetail() {
 
         <RelatedGrid
           title="Related Articles"
-          items={getRelated(blogs, blog.slug)}
+          items={blogs.length ? getRelated(blogs, blog.slug) : []}
           basePath="/blog"
           linkLabel="Read Article"
         />

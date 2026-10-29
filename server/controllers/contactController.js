@@ -36,7 +36,7 @@ const createContact = async (req, res) => {
     }
 
     // Create contact
-    const contact = await Contact.create({
+    await Contact.create({
       name,
       email,
       subject,
@@ -46,7 +46,6 @@ const createContact = async (req, res) => {
     res.status(201).json({
       success: true,
       message: "Contact message submitted successfully",
-      data: contact,
     });
   } catch (error) {
     console.error("Contact API Error:", error.message);

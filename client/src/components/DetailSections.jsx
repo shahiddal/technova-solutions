@@ -139,6 +139,8 @@ export function InfoCard({ title, children }) {
 }
 
 export function RelatedGrid({ title, items, basePath, linkLabel }) {
+  if (!items.length) return null;
+
   return (
     <section className="mt-16">
       <SectionHeading eyebrow="Explore More" title={title} />
@@ -176,7 +178,12 @@ export function RelatedGrid({ title, items, basePath, linkLabel }) {
   );
 }
 
-export function CtaSection({ title, text, buttonLabel = "Contact Us" }) {
+export function CtaSection({
+  title,
+  text,
+  buttonLabel = "Contact Us",
+  to = "/contact",
+}) {
   return (
     <section className="mt-16 rounded-3xl border border-cyan-500/20 bg-cyan-500/5 p-8 text-center sm:p-12">
       <h2 className="text-2xl font-bold sm:text-3xl">{title}</h2>
@@ -184,7 +191,7 @@ export function CtaSection({ title, text, buttonLabel = "Contact Us" }) {
       <p className="mx-auto mt-4 max-w-2xl text-slate-400">{text}</p>
 
       <Link
-        to="/contact"
+        to={to}
         className="mt-7 inline-block rounded-lg bg-cyan-500 px-7 py-3 font-semibold text-slate-950 transition hover:bg-cyan-400"
       >
         {buttonLabel}

@@ -1,8 +1,9 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
-import { projects } from "../data/projects";
-import { findBySlug, getRelated } from "../data/helpers";
+import { useApi } from "../api";
+import { getRelated } from "../data/helpers";
 import NotFound from "./NotFound";
+import { DetailError, DetailSkeleton } from "../components/PageStatus";
 import {
   Breadcrumb,
   CheckList,
@@ -18,9 +19,13 @@ import {
 function ProjectDetail() {
   const { slug } = useParams();
 
-  const project = findBySlug(projects, slug);
+  const { data: project, loading, error, notFound } = useApi(`/api/projects/${slug}`);
+  // One list request feeds the related cards (no request per card)
+  const { data: projects } = useApi("/api/projects");
 
-  if (!project) {
+  if (loading) return <DetailSkeleton />;
+
+  if (notFound) {
     return (
       <NotFound
         title="Project Not Found"
@@ -30,6 +35,10 @@ function ProjectDetail() {
       />
     );
   }
+
+  if (error) return <DetailError />;
+
+  const enquiryLink = `/contact?project=${project.slug}`;
 
   return (
     <div className="min-h-screen bg-slate-950 px-4 pb-20 pt-28 text-white sm:px-6 lg:px-8">
@@ -56,31 +65,36 @@ function ProjectDetail() {
             {project.description}
           </p>
 
-          {(project.liveUrl || project.githubUrl) && (
-            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-              {project.liveUrl && (
-                <a
-                  href={project.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-lg bg-cyan-500 px-6 py-3 text-center font-semibold text-slate-950 transition hover:bg-cyan-400"
-                >
-                  Live Demo
-                </a>
-              )}
+          <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+            <Link
+              to={enquiryLink}
+              className="rounded-lg bg-cyan-500 px-6 py-3 text-center font-semibold text-slate-950 transition hover:bg-cyan-400"
+            >
+              Enquire Now
+            </Link>
 
-              {project.githubUrl && (
-                <a
-                  href={project.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-lg border border-white/20 px-6 py-3 text-center font-semibold text-white transition hover:border-cyan-400 hover:text-cyan-400"
-                >
-                  View on GitHub
-                </a>
-              )}
-            </div>
-          )}
+            {project.liveUrl && (
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-lg border border-white/20 px-6 py-3 text-center font-semibold text-white transition hover:border-cyan-400 hover:text-cyan-400"
+              >
+                Live Demo
+              </a>
+            )}
+
+            {project.githubUrl && (
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-lg border border-white/20 px-6 py-3 text-center font-semibold text-white transition hover:border-cyan-400 hover:text-cyan-400"
+              >
+                View on GitHub
+              </a>
+            )}
+          </div>
 
           <HeroVisual icon={project.icon} className="mt-10 h-56 sm:h-80" />
         </section>
@@ -143,12 +157,13 @@ function ProjectDetail() {
         <CtaSection
           title="Have a similar project in mind?"
           text="Let's discuss your idea and build a solution for your business."
-          buttonLabel="Start a Project"
+          buttonLabel="Enquire Now"
+          to={enquiryLink}
         />
 
         <RelatedGrid
           title="Related Projects"
-          items={getRelated(projects, project.slug)}
+          items={projects ? getRelated(projects, project.slug) : []}
           basePath="/projects"
           linkLabel="View Project"
         />

@@ -1,7 +1,9 @@
 // liveUrl / githubUrl are optional: the Live Demo and GitHub buttons only show when set
+// service: slug of the service preselected when someone enquires from this project
 export const projects = [
   {
     slug: "e-commerce-platform",
+    service: "e-commerce",
     icon: "🛒",
     title: "E-Commerce Platform",
     category: "Web Development",
@@ -42,6 +44,7 @@ export const projects = [
 
   {
     slug: "business-management-system",
+    service: "mern-development",
     icon: "📊",
     title: "Business Management System",
     category: "MERN Application",
@@ -82,6 +85,7 @@ export const projects = [
 
   {
     slug: "company-website",
+    service: "web-development",
     icon: "🌐",
     title: "Company Website",
     category: "Web Design",
@@ -122,6 +126,7 @@ export const projects = [
 
   {
     slug: "task-management-app",
+    service: "mern-development",
     icon: "✅",
     title: "Task Management App",
     category: "Web Application",
@@ -162,6 +167,7 @@ export const projects = [
 
   {
     slug: "learning-platform",
+    service: "mern-development",
     icon: "🎓",
     title: "Learning Platform",
     category: "EdTech",
@@ -202,6 +208,7 @@ export const projects = [
 
   {
     slug: "analytics-dashboard",
+    service: "web-development",
     icon: "📈",
     title: "Analytics Dashboard",
     category: "Dashboard",

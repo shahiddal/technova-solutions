@@ -1,8 +1,9 @@
 import { Link, useParams } from "react-router-dom";
 
-import { services } from "../data/services";
-import { findBySlug, getRelated } from "../data/helpers";
+import { useApi } from "../api";
+import { getRelated } from "../data/helpers";
 import NotFound from "./NotFound";
+import { DetailError, DetailSkeleton } from "../components/PageStatus";
 import {
   Breadcrumb,
   CheckList,
@@ -19,9 +20,13 @@ import {
 function ServiceDetail() {
   const { slug } = useParams();
 
-  const service = findBySlug(services, slug);
+  const { data: service, loading, error, notFound } = useApi(`/api/services/${slug}`);
+  // One list request feeds the related cards (no request per card)
+  const { data: services } = useApi("/api/services");
 
-  if (!service) {
+  if (loading) return <DetailSkeleton />;
+
+  if (notFound) {
     return (
       <NotFound
         title="Service Not Found"
@@ -31,6 +36,10 @@ function ServiceDetail() {
       />
     );
   }
+
+  if (error) return <DetailError />;
+
+  const enquiryLink = `/contact?service=${service.slug}`;
 
   return (
     <div className="min-h-screen bg-slate-950 px-4 pb-20 pt-28 text-white sm:px-6 lg:px-8">
@@ -60,17 +69,17 @@ function ServiceDetail() {
 
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
               <Link
-                to="/contact"
+                to={enquiryLink}
                 className="rounded-lg bg-cyan-500 px-6 py-3 text-center font-semibold text-slate-950 transition hover:bg-cyan-400"
               >
                 Get Started
               </Link>
 
               <Link
-                to="/contact"
+                to={enquiryLink}
                 className="rounded-lg border border-white/20 px-6 py-3 text-center font-semibold text-white transition hover:border-cyan-400 hover:text-cyan-400"
               >
-                Send an Enquiry
+                Enquire Now
               </Link>
             </div>
           </div>
@@ -128,11 +137,13 @@ function ServiceDetail() {
         <CtaSection
           title="Ready to build your next project?"
           text="Let's discuss your requirements and create a solution that fits your business."
+          buttonLabel="Enquire Now"
+          to={enquiryLink}
         />
 
         <RelatedGrid
           title="Related Services"
-          items={getRelated(services, service.slug)}
+          items={services ? getRelated(services, service.slug) : []}
           basePath="/services"
           linkLabel="Learn More"
         />

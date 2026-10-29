@@ -206,13 +206,3 @@ export const blogs = [
     ],
   },
 ];
-
-// Reading time at ~200 words per minute
-export const getReadingTime = (blog) => {
-  const words = blog.content
-    .flatMap((block) => block.items || [block.text])
-    .join(" ")
-    .split(/\s+/).length;
-
-  return `${Math.max(1, Math.round(words / 200))} min read`;
-};
