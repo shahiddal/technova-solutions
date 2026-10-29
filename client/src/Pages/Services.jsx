@@ -1,51 +1,8 @@
 import { Link } from "react-router-dom";
 
-function Services() {
-  const services = [
-    {
-      icon: "💻",
-      slug: "web-development",
-      title: "Web Development",
-      description:
-        "Fast, responsive and scalable websites built using modern web technologies.",
-    },
-    {
-      icon: "⚛️",
-      slug: "mern-development",
-      title: "MERN Development",
-      description:
-        "Full-stack applications built with MongoDB, Express.js, React.js and Node.js.",
-    },
-    {
-      icon: "📱",
-      slug: "app-development",
-      title: "App Development",
-      description:
-        "Modern applications designed to provide smooth experiences across devices.",
-    },
-    {
-      icon: "🎨",
-      slug: "ui-ux-design",
-      title: "UI/UX Design",
-      description:
-        "Clean, intuitive and user-friendly interfaces focused on great user experience.",
-    },
-    {
-      icon: "🛒",
-      slug: "e-commerce",
-      title: "E-Commerce",
-      description:
-        "Powerful online stores with secure and scalable e-commerce solutions.",
-    },
-    {
-      icon: "☁️",
-      slug: "cloud-solutions",
-      title: "Cloud Solutions",
-      description:
-        "Reliable cloud-based solutions designed for scalability and performance.",
-    },
-  ];
+import { services } from "../data/services";
 
+function Services() {
   return (
     <div className="min-h-screen bg-slate-950 px-5 pb-20 pt-28 text-white sm:px-8 lg:px-10">
 
@@ -72,10 +29,11 @@ function Services() {
         {/* Services */}
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 
-          {services.map((service, index) => (
-            <div
-              key={index}
-              className="group rounded-2xl border border-white/10 bg-slate-900 p-7 transition duration-300 hover:-translate-y-2 hover:border-cyan-400/40 hover:bg-slate-900/80"
+          {services.map((service) => (
+            <Link
+              key={service.slug}
+              to={`/services/${service.slug}`}
+              className="group block rounded-2xl border border-white/10 bg-slate-900 p-7 transition duration-300 hover:-translate-y-2 hover:border-cyan-400/40 hover:bg-slate-900/80"
             >
 
               <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-cyan-400/10 text-3xl transition group-hover:bg-cyan-400/20">
@@ -87,17 +45,14 @@ function Services() {
               </h2>
 
               <p className="mt-3 text-sm leading-6 text-gray-400">
-                {service.description}
+                {service.summary}
               </p>
 
-              <Link
-                to={`/services/${service.slug}`}
-                className="mt-6 inline-block text-sm font-semibold text-cyan-400 hover:text-cyan-300"
-              >
+              <span className="mt-6 inline-block text-sm font-semibold text-cyan-400 group-hover:text-cyan-300">
                 Learn More →
-              </Link>
+              </span>
 
-            </div>
+            </Link>
           ))}
 
         </div>

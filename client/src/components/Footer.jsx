@@ -112,11 +112,36 @@ function Footer() {
 
             <div className="mt-5 flex flex-col gap-3 text-sm text-gray-400">
 
-              <span>Web Development</span>
-              <span>MERN Development</span>
-              <span>App Development</span>
-              <span>UI/UX Design</span>
-              <span>E-Commerce Solutions</span>
+              <Link
+                to="/services/web-development"
+                className="transition hover:text-cyan-400"
+              >
+                Web Development
+              </Link>
+              <Link
+                to="/services/mern-development"
+                className="transition hover:text-cyan-400"
+              >
+                MERN Development
+              </Link>
+              <Link
+                to="/services/app-development"
+                className="transition hover:text-cyan-400"
+              >
+                App Development
+              </Link>
+              <Link
+                to="/services/ui-ux-design"
+                className="transition hover:text-cyan-400"
+              >
+                UI/UX Design
+              </Link>
+              <Link
+                to="/services/e-commerce"
+                className="transition hover:text-cyan-400"
+              >
+                E-Commerce Solutions
+              </Link>
 
             </div>
           </div>

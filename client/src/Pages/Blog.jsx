@@ -1,39 +1,6 @@
 import { Link } from "react-router-dom";
 
-const blogs = [
-  {
-    title: "Why Businesses Need a Modern Website in 2026",
-    slug: "modern-website-for-business",
-    category: "Web Development",
-    date: "October 20, 2026",
-    description:
-      "Learn why a modern, responsive website is important for businesses that want to build trust and grow online.",
-  },
-  {
-    title: "MERN Stack: Why It Is Popular for Modern Applications",
-    slug: "mern-stack-modern-applications",
-    category: "Technology",
-    date: "October 18, 2026",
-    description:
-      "Explore the benefits of MongoDB, Express, React and Node.js for building modern full-stack applications.",
-  },
-  {
-    title: "How Responsive Design Improves User Experience",
-    slug: "responsive-design-user-experience",
-    category: "UI/UX",
-    date: "October 15, 2026",
-    description:
-      "Understand why websites need to work smoothly across mobile, tablet and desktop devices.",
-  },
-  {
-    title: "Best Practices for Building Scalable Web Applications",
-    slug: "scalable-web-applications",
-    category: "Development",
-    date: "October 12, 2026",
-    description:
-      "Discover practical development approaches that help applications remain maintainable and scalable.",
-  },
-];
+import { blogs } from "../data/blogs";
 
 function Blog() {
   return (
@@ -58,9 +25,10 @@ function Blog() {
         {/* Blog Cards */}
         <section className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {blogs.map((blog) => (
-            <article
+            <Link
               key={blog.slug}
-              className="flex flex-col rounded-2xl border border-slate-800 bg-slate-900 p-6 transition duration-300 hover:-translate-y-1 hover:border-cyan-500/40"
+              to={`/blog/${blog.slug}`}
+              className="group flex flex-col rounded-2xl border border-slate-800 bg-slate-900 p-6 transition duration-300 hover:-translate-y-1 hover:border-cyan-500/40"
             >
               <div className="flex items-center justify-between gap-3">
                 <span className="text-xs font-semibold uppercase tracking-wider text-cyan-400">
@@ -77,16 +45,13 @@ function Blog() {
               </h2>
 
               <p className="mt-4 flex-1 text-sm leading-6 text-slate-400">
-                {blog.description}
+                {blog.summary}
               </p>
 
-              <Link
-                to={`/blog/${blog.slug}`}
-                className="mt-6 inline-block text-sm font-semibold text-cyan-400 transition hover:text-cyan-300"
-              >
+              <span className="mt-6 inline-block text-sm font-semibold text-cyan-400 transition group-hover:text-cyan-300">
                 Read Article →
-              </Link>
-            </article>
+              </span>
+            </Link>
           ))}
         </section>
       </div>

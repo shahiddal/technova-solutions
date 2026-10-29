@@ -1,5 +1,12 @@
 import { useEffect } from "react";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+  useParams,
+} from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -26,6 +33,13 @@ function ScrollToTop() {
   return null;
 }
 
+// Old project URLs (/portfolio/:slug) now live at /projects/:slug
+function PortfolioRedirect() {
+  const { slug } = useParams();
+
+  return <Navigate to={`/projects/${slug}`} replace />;
+}
+
 function App() {
   return (
     <BrowserRouter>
@@ -40,7 +54,8 @@ function App() {
           <Route path="/services" element={<Services />} />
           <Route path="/services/:slug" element={<ServiceDetail />} />
           <Route path="/portfolio" element={<Portfolio />} />
-          <Route path="/portfolio/:slug" element={<ProjectDetail />} />
+          <Route path="/portfolio/:slug" element={<PortfolioRedirect />} />
+          <Route path="/projects/:slug" element={<ProjectDetail />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogDetail />} />
           <Route path="/contact" element={<Contact />} />

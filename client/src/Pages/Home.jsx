@@ -73,7 +73,10 @@ function Home() {
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
 
             {/* Card 1 */}
-            <div className="rounded-2xl border border-white/10 bg-slate-950 p-6 transition duration-300 hover:-translate-y-2 hover:border-cyan-400/40">
+            <Link
+              to="/services/web-development"
+              className="block rounded-2xl border border-white/10 bg-slate-950 p-6 transition duration-300 hover:-translate-y-2 hover:border-cyan-400/40"
+            >
               <div className="mb-5 text-3xl">💻</div>
 
               <h3 className="text-xl font-semibold">
@@ -84,10 +87,13 @@ function Home() {
                 Modern and responsive websites built with the latest
                 technologies.
               </p>
-            </div>
+            </Link>
 
             {/* Card 2 */}
-            <div className="rounded-2xl border border-white/10 bg-slate-950 p-6 transition duration-300 hover:-translate-y-2 hover:border-cyan-400/40">
+            <Link
+              to="/services/app-development"
+              className="block rounded-2xl border border-white/10 bg-slate-950 p-6 transition duration-300 hover:-translate-y-2 hover:border-cyan-400/40"
+            >
               <div className="mb-5 text-3xl">📱</div>
 
               <h3 className="text-xl font-semibold">
@@ -98,10 +104,13 @@ function Home() {
                 Powerful applications designed for modern users and
                 businesses.
               </p>
-            </div>
+            </Link>
 
             {/* Card 3 */}
-            <div className="rounded-2xl border border-white/10 bg-slate-950 p-6 transition duration-300 hover:-translate-y-2 hover:border-cyan-400/40">
+            <Link
+              to="/services/ui-ux-design"
+              className="block rounded-2xl border border-white/10 bg-slate-950 p-6 transition duration-300 hover:-translate-y-2 hover:border-cyan-400/40"
+            >
               <div className="mb-5 text-3xl">🎨</div>
 
               <h3 className="text-xl font-semibold">
@@ -112,10 +121,13 @@ function Home() {
                 Clean and user-friendly interfaces that provide great
                 experiences.
               </p>
-            </div>
+            </Link>
 
             {/* Card 4 */}
-            <div className="rounded-2xl border border-white/10 bg-slate-950 p-6 transition duration-300 hover:-translate-y-2 hover:border-cyan-400/40">
+            <Link
+              to="/services"
+              className="block rounded-2xl border border-white/10 bg-slate-950 p-6 transition duration-300 hover:-translate-y-2 hover:border-cyan-400/40"
+            >
               <div className="mb-5 text-3xl">🚀</div>
 
               <h3 className="text-xl font-semibold">
@@ -126,7 +138,7 @@ function Home() {
                 Scalable technology solutions tailored to your business
                 needs.
               </p>
-            </div>
+            </Link>
 
           </div>
         </div>
