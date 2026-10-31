@@ -1,3 +1,18 @@
 {
+  "routes": [
+    {
+      "src": "/api/admin/(.*)",
+      "dest": "https://technova-solutions-ll2a.onrender.com/api/admin/$1",
+      "transforms": [
+        {
+          "type": "request.headers",
+          "op": "set",
+          "target": { "key": "x-technova-proxy-secret" },
+          "args": "$ADMIN_PROXY_SECRET",
+          "env": ["ADMIN_PROXY_SECRET"]
+        }
+      ]
+    }
+  ],
   "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }

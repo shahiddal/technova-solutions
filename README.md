@@ -74,6 +74,10 @@ The site runs on `http://localhost:5173`.
 | `RESEND_API_KEY` | [Resend](https://resend.com) API key for enquiry emails (server only, never in the client) |
 | `MAIL_FROM` | Sender address for enquiry emails; its domain must be verified in Resend |
 | `ENQUIRY_EMAIL_TO` | Inbox that receives new enquiry notifications |
+| `ADMIN_AUTH_SECRET` | Secret that signs admin sessions (32+ random characters); admin login is off without it |
+| `ADMIN_EMAIL` | Optional default email for `npm run create-admin` |
+| `ADMIN_PROXY_SECRET` | Production only, same value on Render and Vercel: locks `/api/admin` to the Vercel proxy |
+| `NODE_ENV` | Set to `production` on the server so the admin cookie is always `Secure` |
 
 Email notifications are sent only when `RESEND_API_KEY`, `MAIL_FROM` and `ENQUIRY_EMAIL_TO` are all set; otherwise enquiries are just saved to MongoDB. The email is sent after the enquiry is saved; if it fails, the failure is logged and the visitor still gets the normal success response.
 
@@ -110,6 +114,51 @@ item that was unpublished later.
 
 Responses are `{ "success": true, "data": ... }`; an unknown or unpublished slug returns
 `404 { "success": false, "message": "Service not found" }` (or Project / Article).
+
+## Admin
+
+A single admin signs in at `/admin/login` and lands on `/admin/dashboard`. There is no
+public signup.
+
+**Setup**
+
+1. Set `ADMIN_AUTH_SECRET` in `server/.env` (at least 32 random characters):
+   `node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"`
+2. Create the admin (or reset its password) from `server/`:
+   `npm run create-admin`. It shows the target database and asks you to type its name
+   to confirm, then asks for the email (default `ADMIN_EMAIL`) and the password twice
+   without echoing it. Passwords need at least 12 characters. Only one admin account
+   can exist.
+
+**How it works**
+
+- Passwords are stored as bcrypt hashes (cost 12).
+- Login sets `technova_admin`: a signed JWT (HS256, 8 hours) holding only the admin id
+  and a session version, in an `httpOnly`, `SameSite=Strict` cookie limited to
+  `/api/admin`. It is `Secure` over HTTPS and always when `NODE_ENV=production`.
+- Logout clears the cookie and bumps the session version, so old tokens stop working.
+  Resetting the password does the same.
+- Failed logins are limited to 5 per visitor IP and 20 in total per 15 minutes.
+- `requireAdmin` (server/middleware/requireAdmin.js) protects admin APIs and returns
+  JSON 401 when there is no valid session.
+- The browser always calls `/api/admin` on the site's own origin: the Vite dev/preview
+  proxy forwards it to `VITE_API_URL` locally, and the Vercel rewrite in
+  `client/vercel.json` forwards it to Render in production. That keeps the cookie
+  first-party (Safari and Firefox block third-party cookies), and CORS never needs
+  credentials. The public API is still called directly at `VITE_API_URL`.
+- In production, set the same `ADMIN_PROXY_SECRET` on Render and Vercel. The Vercel
+  route sets it as the `x-technova-proxy-secret` header (a transform in `vercel.json`),
+  and the API answers `403` to admin requests without it, so nobody can reach the admin
+  API around Vercel. Only for those verified requests is the first `X-Forwarded-For`
+  entry (written by Vercel) used as the visitor IP for login limits; otherwise `req.ip`.
+  Leave it unset locally.
+
+| Method | Endpoint               | Auth     |
+| ------ | ---------------------- | -------- |
+| `POST` | `/api/admin/login`     | Public   |
+| `POST` | `/api/admin/logout`    | Public   |
+| `GET`  | `/api/admin/me`        | Admin    |
+| `GET`  | `/api/admin/dashboard` | Admin    |
 
 ## API
 

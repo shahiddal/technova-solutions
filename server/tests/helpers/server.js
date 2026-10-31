@@ -18,14 +18,19 @@ const startServer = async ({ mongoUri, env = {}, nodeArgs = [] }) => {
   const child = spawn(process.execPath, [...nodeArgs, "server.js"], {
     cwd: path.join(__dirname, "../.."),
     env: { ...process.env, RESEND_API_KEY: "", ...env, PORT: String(port), MONGO_URI: mongoUri },
-    stdio: "ignore",
+    stdio: ["ignore", "pipe", "pipe"],
   });
+
+  // Keep everything the server logs, so tests can check nothing secret is printed
+  let output = "";
+  child.stdout.on("data", (chunk) => (output += chunk));
+  child.stderr.on("data", (chunk) => (output += chunk));
 
   // Wait until the API answers from the database
   for (let attempt = 0; attempt < 50; attempt++) {
     try {
       if ((await fetch(`${baseUrl}/api/services`)).ok) {
-        return { baseUrl, stop: () => child.kill() };
+        return { baseUrl, stop: () => child.kill(), output: () => output };
       }
     } catch {
       // not listening yet

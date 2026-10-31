@@ -4,6 +4,7 @@ import {
   Routes,
   Route,
   Navigate,
+  Outlet,
   useLocation,
   useParams,
 } from "react-router-dom";
@@ -21,6 +22,9 @@ import Blog from "./Pages/Blog";
 import BlogDetail from "./Pages/BlogDetail";
 import Contact from "./Pages/Contact";
 import NotFound from "./Pages/NotFound";
+import AdminLayout from "./components/AdminLayout";
+import AdminLogin from "./Pages/admin/AdminLogin";
+import AdminDashboard from "./Pages/admin/AdminDashboard";
 
 // Start each new page at the top instead of keeping the previous scroll position
 function ScrollToTop() {
@@ -40,15 +44,28 @@ function PortfolioRedirect() {
   return <Navigate to={`/projects/${slug}`} replace />;
 }
 
+// Public pages share the site navbar and footer; admin pages have their own layout
+function PublicLayout() {
+  return (
+    <>
+      <Navbar />
+
+      <main>
+        <Outlet />
+      </main>
+
+      <Footer />
+    </>
+  );
+}
+
 function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
 
-      <Navbar />
-
-      <main>
-        <Routes>
+      <Routes>
+        <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
@@ -60,10 +77,16 @@ function App() {
           <Route path="/blog/:slug" element={<BlogDetail />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="*" element={<NotFound />} />
-        </Routes>
-      </main>
+        </Route>
 
-      <Footer />
+        <Route path="/admin/login" element={<AdminLogin />} />
+
+        {/* AdminLayout checks the session and sends logged-out visitors to /admin/login */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Navigate to="dashboard" replace />} />
+          <Route path="dashboard" element={<AdminDashboard />} />
+        </Route>
+      </Routes>
     </BrowserRouter>
   );
 }

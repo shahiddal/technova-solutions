@@ -40,3 +40,7 @@ export function useApi(path) {
     notFound: result.error?.response?.status === 404,
   };
 }
+
+// Admin API: always same-origin (Vercel rewrite in production, Vite proxy locally),
+// so the httpOnly session cookie is first-party. Never cached.
+export const adminApi = axios.create({ baseURL: "/api/admin", timeout: 70000 });

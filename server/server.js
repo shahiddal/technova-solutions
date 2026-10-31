@@ -11,6 +11,7 @@ const {
   projectRoutes,
   blogRoutes,
 } = require("./routes/contentRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use("/api/enquiries", enquiryRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/blogs", blogRoutes);
+app.use("/api/admin", adminRoutes);
 
 // Unknown API routes: JSON instead of Express's default HTML page
 app.use("/api", (req, res) => {
